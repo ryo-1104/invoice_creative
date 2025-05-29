@@ -56,3 +56,38 @@ button:hover {
     border-radius: 4px;
     background-color: #f9f9f9;
 }
+
+@media print {
+  body * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  .print-root, .print-root * {
+    display: block !important;
+    visibility: visible !important;
+    box-sizing: border-box !important;
+  }
+  .print-area {
+    width: 190mm !important;
+    min-width: 190mm !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 9999;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  .print-btn {
+    display: none !important;
+  }
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+}
