@@ -15,12 +15,13 @@ type Item = {
 };
 
 type Props = {
-  onDataChange: (data: { date: string; recipient: string; items: Item[] }) => void;
+  onDataChange: (data: { date: string; recipient: string; recipientSuffix: '様' | '御中'; items: Item[] }) => void;
 };
 
 const InvoiceForm: React.FC<Props> = ({ onDataChange }) => {
   const [date, setDate] = useState(getToday());
   const [recipient, setRecipient] = useState('');
+  const [recipientSuffix, setRecipientSuffix] = useState<'様' | '御中'>('様');
   const [items, setItems] = useState<Item[]>([{ name: '', unitPrice: 0, quantity: 0 }]);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,20 +33,25 @@ const InvoiceForm: React.FC<Props> = ({ onDataChange }) => {
       newItems[index][field] = Number(value) as number;
     }
     setItems(newItems);
-    onDataChange({ date, recipient, items: newItems });
+    onDataChange({ date, recipient, recipientSuffix, items: newItems });
   };
 
   const handleAddItem = () => {
     const newItems = [...items, { name: '', unitPrice: 0, quantity: 0 }];
     setItems(newItems);
-    onDataChange({ date, recipient, items: newItems });
+    onDataChange({ date, recipient, recipientSuffix, items: newItems });
   };
 
   const handleChange = (setter: React.Dispatch<React.SetStateAction<any>>, value: any, key: string) => {
     setter(value);
-    if (key === 'date') onDataChange({ date: value, recipient, items });
-    if (key === 'recipient') onDataChange({ date, recipient: value, items });
+    if (key === 'date') onDataChange({ date: value, recipient, recipientSuffix, items });
+    if (key === 'recipient') onDataChange({ date, recipient: value, recipientSuffix, items });
   };
+
+  React.useEffect(() => {
+    onDataChange({ date, recipient, recipientSuffix, items });
+    // eslint-disable-next-line
+  }, [date, recipient, recipientSuffix, items]);
 
   return (
     <div>
@@ -61,8 +67,53 @@ const InvoiceForm: React.FC<Props> = ({ onDataChange }) => {
           />
         </label>
       </div>
-      <div>
-        <label>宛名: <input type="text" value={recipient} onChange={e => handleChange(setRecipient, e.target.value, 'recipient')} /></label>
+      <div style={{ marginTop: 16 }}>
+        <label>
+          宛名: 
+          <input
+            type="text"
+            value={recipient}
+            onChange={e => handleChange(setRecipient, e.target.value, 'recipient')}
+            style={{ marginLeft: 4 }}
+          />
+        </label>
+        {/* 「様」「御中」ボタンを宛名の下に配置 */}
+        <div style={{ display: 'flex', gap: 16, marginTop: 12 }}>
+          <button
+            type="button"
+            onClick={() => setRecipientSuffix('様')}
+            style={{
+              background: '#fff',
+              color: recipientSuffix === '様' ? '#1976d2' : '#333',
+              border: recipientSuffix === '様' ? '2px solid #1976d2' : '1px solid #ddd',
+              borderRadius: 24,
+              padding: '8px 28px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            様
+          </button>
+          <button
+            type="button"
+            onClick={() => setRecipientSuffix('御中')}
+            style={{
+              background: '#fff',
+              color: recipientSuffix === '御中' ? '#1976d2' : '#333',
+              border: recipientSuffix === '御中' ? '2px solid #1976d2' : '1px solid #ddd',
+              borderRadius: 24,
+              padding: '8px 28px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            御中
+          </button>
+        </div>
       </div>
       <div>
         <h3>項目</h3>

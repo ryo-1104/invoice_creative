@@ -3,14 +3,22 @@ import InvoiceForm from './components/InvoiceForm';
 import InvoicePreview from './components/InvoicePreview';
 import './styles/App.css';
 
+type InvoiceData = {
+    date: string;
+    recipient: string;
+    recipientSuffix: '様' | '御中';
+    items: { name: string; unitPrice: number; quantity: number }[];
+};
+
 const App: React.FC = () => {
-    const [invoiceData, setInvoiceData] = useState({
+    const [invoiceData, setInvoiceData] = useState<InvoiceData>({
         date: '',
         recipient: '',
+        recipientSuffix: '様',
         items: [{ name: '', unitPrice: 0, quantity: 0 }],
     });
 
-    const handleDataChange = (data: any) => {
+    const handleDataChange = (data: InvoiceData) => {
         setInvoiceData(data);
     };
 
