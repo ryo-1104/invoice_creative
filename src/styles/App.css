@@ -1,0 +1,168 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.invoice-preview {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.slide-form {
+  position: fixed;
+  top: 0;
+  right: -420px; /* フォーム幅+余白分だけ右に隠す */
+  width: 400px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.08);
+  border-radius: 8px 0 0 8px;
+  z-index: 1000;
+  transition: right 0.4s cubic-bezier(.4,0,.2,1);
+  padding: 32px 24px 24px 24px;
+  overflow-y: auto;
+}
+.slide-form.open {
+  right: 0;
+}
+
+.slide-open-btn,
+.slide-close-btn {
+  position: fixed;
+  top: 50%;
+  right: 24px; /* 右端から24px離す */
+  transform: translateY(-50%);
+  z-index: 1100;
+  background: #fff;
+  color: #1976d2;
+  border: none;
+  border-radius: 12px;      /* 角丸四角 */
+  font-size: 40px;
+  padding: 8px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.18), 0 1.5px 4px rgba(0,0,0,0.10);
+  transition: box-shadow 0.2s, transform 0.3s cubic-bezier(.4,0,.2,1), color 0.2s;
+  width: 64px;
+  height: 64px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.slide-close-btn {
+  right: 424px; /* フォーム幅400px＋余白24px */
+}
+
+.slide-open-btn:hover,
+.slide-close-btn:hover {
+  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.28), 0 3px 12px rgba(0,0,0,0.16);
+  color: #1251a3;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #1976d2;
+  cursor: pointer;
+  z-index: 1200;
+  padding: 0 8px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.close-btn:hover {
+  color: #145ea8;
+}
+
+@media print {
+  body * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  .print-root, .print-root * {
+    display: block !important;
+    visibility: visible !important;
+    box-sizing: border-box !important;
+  }
+  .print-area {
+    width: 190mm !important;
+    min-width: 190mm !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 9999;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  .print-btn {
+    display: none !important;
+  }
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+  .hide-on-pdf {
+    display: none !important;
+  }
+}
