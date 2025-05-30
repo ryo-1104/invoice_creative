@@ -10,7 +10,6 @@
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
-    "gh-pages": "^6.3.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "react": "^18.0.0",
@@ -20,7 +19,8 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0"
+    "@types/react-dom": "^18.0.0",
+    "gh-pages": "^6.3.0"
   },
   "homepage": "https://ryo-1104.github.io/invoice_creative/",
   "license": "MIT",
