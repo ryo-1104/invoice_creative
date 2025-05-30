@@ -28,16 +28,13 @@ const App: React.FC = () => {
             <div style={{ width: '100%', textAlign: 'center', margin: '32px 0 24px 0' }}>
                 <h1 style={{ fontSize: 32, margin: 0, letterSpacing: 2 }}>請求書作成</h1>
             </div>
-            {/* プレビュー中央配置 */}
+            {/* プレビュー左寄せ・画面いっぱい */}
             <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: 'calc(100vh - 120px)'
+                width: '100%',
+                minHeight: 'calc(100vh - 120px)',
+                background: '#fff',
             }}>
-                <div>
-                    <InvoicePreview invoiceData={invoiceData} />
-                </div>
+                <InvoicePreview invoiceData={invoiceData} />
             </div>
             {/* 右端中央のスライドインボタン */}
             {!formOpen && (
@@ -45,26 +42,23 @@ const App: React.FC = () => {
                     className="slide-open-btn"
                     onClick={() => setFormOpen(true)}
                     aria-label="フォームを開く"
+                    type="button"
                 >
-                    《
+                    ◀
                 </button>
             )}
             {/* 右側フォーム（スライドイン） */}
             <div className={`slide-form${formOpen ? ' open' : ''}`}>
-                <button
-                    style={{
-                        position: 'absolute',
-                        top: 16,
-                        right: 24,
-                        background: 'none',
-                        border: 'none',
-                        fontSize: 28,
-                        cursor: 'pointer',
-                        color: '#1976d2'
-                    }}
-                    onClick={() => setFormOpen(false)}
-                    aria-label="閉じる"
-                >×</button>
+                {formOpen && (
+                    <button
+                        className="slide-close-btn"
+                        onClick={() => setFormOpen(false)}
+                        aria-label="フォームを閉じる"
+                        type="button"
+                    >
+                        ▶
+                    </button>
+                )}
                 <InvoiceForm onDataChange={handleDataChange} />
             </div>
         </div>

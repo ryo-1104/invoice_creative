@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 type Item = {
   name: string;
@@ -17,6 +19,39 @@ type InvoiceData = {
 };
 
 const InvoicePreview: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData }) => {
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  // PDF保存処理
+  const handleSavePdf = async () => {
+    // プレビュー・ボタンを一時的に非表示
+    const previewLabel = document.querySelector('.hide-on-pdf') as HTMLElement;
+    const pdfBtn = document.querySelector('.pdf-save-btn') as HTMLElement;
+    if (previewLabel) previewLabel.style.display = 'none';
+    if (pdfBtn) pdfBtn.style.display = 'none';
+
+    // キャプチャ
+    if (previewRef.current) {
+      const canvas = await html2canvas(previewRef.current, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4'
+      });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgProps = { width: canvas.width, height: canvas.height };
+      const ratio = imgProps.width / imgProps.height;
+      const pdfWidth = pageWidth;
+      const pdfHeight = pdfWidth / ratio;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('invoice.pdf');
+    }
+
+    // 元に戻す
+    if (previewLabel) previewLabel.style.display = '';
+    if (pdfBtn) pdfBtn.style.display = '';
+  };
+
   // プレースホルダー用
   const placeholderStyle = { color: '#bbb' };
 
@@ -24,8 +59,15 @@ const InvoicePreview: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData })
   const tax = Math.round(subtotal * 0.1);
   const total = subtotal + tax;
 
+  // 保存ボタンのクリック処理（仮実装）
+  const handleSave = () => {
+    alert('請求書を保存しました！（ダミー処理）');
+    // 実際の保存処理をここに実装してください
+  };
+
   return (
     <div
+      ref={previewRef}
       style={{
         marginTop: 32,
         padding: '40px 48px',
@@ -36,7 +78,6 @@ const InvoicePreview: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData })
         width: '100%',
         marginLeft: 'auto',
         marginRight: 'auto',
-        border: '1.5px solid #e0e6ef'
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 36 }}>
@@ -52,6 +93,7 @@ const InvoicePreview: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData })
         >
           請求書
         </h2>
+        {/* プレビュー表示はPDF保存時は非表示 */}
         <span
           className="hide-on-pdf"
           style={{
@@ -80,12 +122,6 @@ const InvoicePreview: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData })
                 </>
               : '宛名'}
           </div>
-          <div style={{ color: invoiceData.address ? '#222' : '#bbb', fontSize: 15, marginTop: 6 }}>
-            {invoiceData.address ? invoiceData.address : '住所'}
-          </div>
-          <div style={{ color: invoiceData.tel ? '#222' : '#bbb', fontSize: 15, marginTop: 2 }}>
-            {invoiceData.tel ? invoiceData.tel : '電話番号'}
-          </div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ color: invoiceData.date ? '#222' : '#bbb', fontSize: 16 }}>
@@ -93,6 +129,12 @@ const InvoicePreview: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData })
           </div>
           <div style={{ color: invoiceData.name ? '#222' : '#bbb', fontSize: 16, marginTop: 10 }}>
             {invoiceData.name ? invoiceData.name : '名前'}
+          </div>
+          <div style={{ color: invoiceData.address ? '#222' : '#bbb', fontSize: 15, marginTop: 6 }}>
+            {invoiceData.address ? invoiceData.address : '住所'}
+          </div>
+          <div style={{ color: invoiceData.tel ? '#222' : '#bbb', fontSize: 15, marginTop: 2 }}>
+            {invoiceData.tel ? invoiceData.tel : '電話番号'}
           </div>
         </div>
       </div>
@@ -194,6 +236,30 @@ const InvoicePreview: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData })
         }}>
           合計: {total} 円
         </div>
+      </div>
+      {/* 合計の下に追加 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: 32
+      }}>
+        <button
+          className="pdf-save-btn"
+          style={{
+            background: '#1976d2',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: 18,
+            border: 'none',
+            borderRadius: 8,
+            padding: '12px 32px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(25,118,210,0.10)'
+          }}
+          onClick={handleSavePdf}
+        >
+          PDFで保存
+        </button>
       </div>
     </div>
   );
